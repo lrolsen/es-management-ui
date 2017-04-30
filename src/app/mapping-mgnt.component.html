@@ -1,0 +1,27 @@
+<ul class="mappings" ng-if="esTemplate">
+    <h3>Fields that already have a predefined type (names are case sensitive)</h3>
+    <li class="fieldMappings" *ngFor="let mapping of esTemplate.fieldMappings">
+        <div>
+            <input [(ngModel)]="mapping.fieldName" placeholder="Name of field" />
+            <select [(ngModel)]="mapping.fieldType">
+                <option *ngFor="let fieldType of fieldTypes | enumKeyValuelist;" [value]="fieldType.key" >{{fieldType.value}}</option>
+            </select>
+            <button (click)="deleteMappingClicked(mapping)">Delete</button>
+        </div>
+    </li>
+</ul>
+<ul class="mappings">
+    <button (click)="addNewMappingClicked()">Add new...</button>
+    <h3>Fields that currently have a type conflict and no predefined type (names are case sensitive)</h3>
+    <li class="unmappedFieldsWithConflicts" *ngFor="let mapping of esTemplate.unmappedFieldsWithConflicts">
+        <div>
+            <input [(ngModel)]="mapping.fieldName" placeholder="Name of field" readonly="true" />
+            <select [(ngModel)]="mapping.fieldType">
+                <option *ngFor="let fieldType of fieldTypes | enumKeyValuelist;" [value]="fieldType.key" >{{fieldType.value}}</option>
+            </select>
+            <button (click)="createMappingForConflictingTypeClicked(mapping)">Create Mapping</button>
+        </div>
+    </li>
+    <br/>
+    <button (click)="uploadToESClicked()">Upload to Elasticsearch...</button>
+</ul>
