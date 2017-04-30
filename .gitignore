@@ -4,5 +4,5 @@ src/app/**/*.map
 node_modules
 jspm_packages
 bower_components
-src/*.js
-src/*.map
+src/main.js
+src/main.js.map
