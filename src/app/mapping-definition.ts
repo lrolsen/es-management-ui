@@ -9,6 +9,10 @@ export class MappingDefinition {
 
   fieldName: string;
   fieldType: EFieldTypes;
+
+  toString() {
+    return 'Name: ' + this.fieldName + '  Type: ' + EFieldTypes[this.fieldType];
+  }
 } 
 
  

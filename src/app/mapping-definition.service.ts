@@ -2,32 +2,32 @@ import { ESTemplate } from './es-template';
 import { MappingDefinition } from './mapping-definition';
 import { Injectable } from '@angular/core';
 import { EFieldTypes } from './field-types';
+import { Headers, Http } from '@angular/http';
+import 'rxjs/add/operator/toPromise';
 
 @Injectable()
 export class MappingDefinitionService {
 
-  getTemplateFromES(): ESTemplate {
-    return esTemplate2;
+  constructor(private http: Http) {
+  }
+
+  getTemplateFromES(): Promise<ESTemplate> {
+    return this.http.get('http://localhost:9200/_template/serilog-events-template')
+      .toPromise()
+      .then(f=>this.parseTemplate(f.text()))
+      .catch(f=>alert('Unable to fetch template from Elasticsearch' + f))
   }
 
   uploadToES(template : ESTemplate) : void {
       alert('upload placeholder')
   }
+
+  parseTemplate(templateString: string) : ESTemplate {
+    var template = JSON.parse(templateString)['serilog-events-template']
+    var fields = template.mappings['_default_'].properties.fields.properties;
+    var mappings = Object.keys(fields).map(fieldName=>new MappingDefinition(fieldName, EFieldTypes[<string>fields[fieldName].type] ));
+    var esTemplate = new ESTemplate(templateString, mappings, null);
+
+    return esTemplate;
+  }
 }
-
-export var  esTemplate2 : ESTemplate = {
-    template : 'pest',
-    fieldMappings : [
-      {fieldName : 'abc1', fieldType : EFieldTypes.string},
-      {fieldName : 'abc2', fieldType : EFieldTypes.integer},
-      {fieldName : 'abc3', fieldType : EFieldTypes.double},
-      {fieldName : 'abc4', fieldType : EFieldTypes.string},
-      {fieldName : 'abc5', fieldType : EFieldTypes.string},
-    ],
-    unmappedFieldsWithConflicts : [
-      {fieldName : 'conflictingField1', fieldType : EFieldTypes.string},
-      {fieldName : 'conflictingField2', fieldType : EFieldTypes.integer},
-      {fieldName : 'conflictingField3', fieldType : EFieldTypes.string}
-    ]
-  };
-
