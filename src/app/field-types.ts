@@ -4,5 +4,6 @@ export enum EFieldTypes {
     half_float,
     boolean,
     short,
+    float,
     geo_point
 }

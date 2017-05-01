@@ -14,14 +14,14 @@ import {EnumKeyValueListPipe} from "./enumlist.pipe";
 })
 
 export class MappingMgntComponent implements OnInit {
-    esTemplate : ESTemplate;
+    esTemplate : ESTemplate = new ESTemplate('',null,null);
     fieldTypes : EFieldTypes[];
 
     constructor(private mappingDefinitionService: MappingDefinitionService) { }
     
     ngOnInit(): void {
         this.fieldTypes = Object.keys(EFieldTypes).map(k => EFieldTypes[k]).filter(v => typeof v === "string");
-        this.esTemplate = this.mappingDefinitionService.getTemplateFromES();
+        this.mappingDefinitionService.getTemplateFromES().then(f=>this.esTemplate = f );
     }
 
     deleteMappingClicked(mapping : MappingDefinition) : void {
@@ -30,7 +30,7 @@ export class MappingMgntComponent implements OnInit {
     }
 
     addNewMappingClicked() : void {
-        this.esTemplate.fieldMappings.push(new MappingDefinition('',EFieldTypes.string))
+        this.esTemplate.fieldMappings.push(new MappingDefinition('',EFieldTypes.text))
     }
 
     createMappingForConflictingTypeClicked(mapping : MappingDefinition) : void {

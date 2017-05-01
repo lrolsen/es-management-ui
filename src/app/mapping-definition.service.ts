@@ -14,7 +14,7 @@ export class MappingDefinitionService {
   getTemplateFromES(): Promise<ESTemplate> {
     return this.http.get('http://localhost:9200/_template/serilog-events-template')
       .toPromise()
-      .then(f=>this.parseTemplate(f.text()))
+      .then(f=>Promise.resolve(this.parseTemplate(f.text())))
       .catch(f=>alert('Unable to fetch template from Elasticsearch' + f))
   }
 
